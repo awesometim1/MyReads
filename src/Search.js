@@ -7,7 +7,7 @@ class Search extends React.Component {
   render() {
     return (
 
-<div className="search-books">
+		<div className="search-books">
             <div className="search-books-bar">
               <Link className="close-search" to="/">Close</Link>
               <div className="search-books-input-wrapper">

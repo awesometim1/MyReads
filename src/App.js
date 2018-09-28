@@ -33,6 +33,29 @@ class BooksApp extends React.Component {
 
   }
 
+  changeShelf( bookToChange, shelf ) {
+    
+    let book = this.state.allBooks.filter((bk) => bk.id === bookToChange.id)
+	let exist = book.length > 0;
+	if (exist) {
+    	book.shelf = shelf;
+        BooksAPI.update(book, shelf);
+    }
+    else {
+      	bookToChange.shelf = shelf;
+    	if (shelf.includes('c')){
+        this.setState({current : this.stae.current.concat([bookToChange])}); 
+    	}
+		else if (shelf.includes('w')){
+        this.setState({want : this.state.want.concat([bookToChange])}); 
+        }
+		else {
+        this.setState({read : this.state.read.concat([bookToChange])});   
+        }
+    }
+
+  }
+
 
   render() {
     return (
@@ -62,7 +85,7 @@ class BooksApp extends React.Component {
 		{/*SEARCH ROUTE
        */}
 		<Route path='/search' render={() => (
-          <Search userBooks={this.state.books}/>
+          <Search books={this.state.books}/>
         )} />
           
       </div>
