@@ -18,7 +18,11 @@ class Book extends React.Component {
 
   shelfChange(event) {
     let initShelf = this.state.shelf;
-	this.setState({shelf : event.target.value}, this.props.changeShelf(this.props.obj, event.target.value, initShelf))
+    
+    this.setState({shelf:event.target.value});
+    
+    this.props.changeShelf(this.props.obj, event.target.value, initShelf);
+
   }
 	
   render() {
@@ -27,7 +31,7 @@ class Book extends React.Component {
           <div className="book-top">
                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.url})` }}></div>
                     <div className="book-shelf-changer">
-                         <select value={ this.state.shelf || 'none'} onChange={this.shelfChange}>
+                         <select value={ this.state.shelf || this.props.shelf || 'none'} onChange={this.shelfChange}>
                               <option value="move" disabled>Move to...</option>
                               <option value="currentlyReading">Currently Reading</option>
                               <option value="wantToRead">Want to Read</option>
