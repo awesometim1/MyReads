@@ -6,7 +6,10 @@ import { Route, Link} from 'react-router-dom'
 import Search from './Search.js'
 
 class BooksApp extends React.Component {
-
+  constructor(props) {
+    super(props);
+    this.changeShelf = this.changeShelf.bind(this);
+  }
   //state with list of all books, and a list corresponding to each section of bookshelf
   state = {
    
@@ -34,17 +37,46 @@ class BooksApp extends React.Component {
   }
 
   changeShelf( bookToChange, shelf ) {
-    
     let book = this.state.allBooks.filter((bk) => bk.id === bookToChange.id)
 	let exist = book.length > 0;
+	book = book[0];
 	if (exist) {
-    	book.shelf = shelf;
-        BooksAPI.update(book, shelf);
+      
+      	//DELETION
+      	if (book.shelf.includes('c')){
+        this.setState({current : this.state.current.filter(bk => bk.id !== book.id)}); 
+    	}
+		else if (book.shelf.includes('w')){
+        this.setState({want : this.state.want.filter(bk => bk.id !== book.id)});
+        }
+		else {
+        this.setState({read : this.state.read.filter(bk => bk.id !== book.id)});
+        }
+
+		//BOOKSAPI UPDATE & CHANGE SHELF ON ALLBOOKS LIST
+		BooksAPI.update(book, shelf).then(() => {
+     	book.shelf = shelf        
+		})
+		
+		//BOOKSHELF CHANGE 
+        if (shelf.includes('c')){
+        this.setState({current : this.state.current.concat([bookToChange])}); 
+    	}
+		else if (shelf.includes('w')){
+        this.setState({want : this.state.want.concat([bookToChange])}); 
+        }
+		else {
+        this.setState({read : this.state.read.concat([bookToChange])});   
+        }
+
+
+
+
     }
     else {
       	bookToChange.shelf = shelf;
     	if (shelf.includes('c')){
-        this.setState({current : this.stae.current.concat([bookToChange])}); 
+        this.setState({current : this.state.current.concat([bookToChange])}); 
     	}
 		else if (shelf.includes('w')){
         this.setState({want : this.state.want.concat([bookToChange])}); 
@@ -70,9 +102,9 @@ class BooksApp extends React.Component {
             </div>
             <div className="list-books-content">
               <div>
-                <Shelf id="current" books={this.state.current}/>
-                <Shelf id="want" books={this.state.want}/>
-                <Shelf id="read" books={this.state.read}/>
+                <Shelf changeShelf={this.changeShelf} id="current" books={this.state.current}/>
+                <Shelf changeShelf={this.changeShelf} id="want" books={this.state.want}/>
+                <Shelf changeShelf={this.changeShelf} id="read" books={this.state.read}/>
               </div>
             </div>
             <div className="open-search">
