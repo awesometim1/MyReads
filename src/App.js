@@ -41,8 +41,9 @@ class BooksApp extends React.Component {
       	BooksAPI.update(bookToChange, shelf).then(() => {
      	bookToChange.shelf = shelf;
           
-              	//DELETION
-      	if (initShelf.includes('c')){
+        //DELETION
+      	if (initShelf != null){
+        if (initShelf.includes('c')){
         this.setState({current : this.state.current.filter(bk => bk.id !== bookToChange.id)}); 
     	}
 		else if (initShelf.includes('w')){
@@ -50,6 +51,7 @@ class BooksApp extends React.Component {
         }
 		else {
         this.setState({read : this.state.read.filter(bk => bk.id !== bookToChange.id)});
+        }
         }
 
 
@@ -65,8 +67,6 @@ class BooksApp extends React.Component {
         }
 		})
     	  
-
-
   }
 
 
@@ -98,7 +98,7 @@ class BooksApp extends React.Component {
 		{/*SEARCH ROUTE
        */}
 		<Route path='/search' render={() => (
-          <Search books={this.state.books}/>
+          <Search books={this.state.books} changeShelf={this.changeShelf}/>
         )} />
           
       </div>

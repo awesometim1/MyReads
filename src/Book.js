@@ -12,8 +12,9 @@ class Book extends React.Component {
   	shelf : ""
   }
 
+
   componentDidMount(){
-   	this.setState({shelf: this.props.shelf});
+    this.setState({shelf: this.props.shelf});
   }
 
   shelfChange(event) {
@@ -29,7 +30,7 @@ class Book extends React.Component {
     return (
      <div className="book">
           <div className="book-top">
-               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.url})` }}></div>
+               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.url != null && this.props.url})` }}></div>
                     <div className="book-shelf-changer">
                          <select value={ this.state.shelf || this.props.shelf || 'none'} onChange={this.shelfChange}>
                               <option value="move" disabled>Move to...</option>
@@ -40,9 +41,10 @@ class Book extends React.Component {
                          </select>
                    </div>
                </div>
-              <div className="book-title">{this.props.title}</div>
+              <div className="book-title">{this.props.title != null && this.props.title}</div>
               <div className="book-authors">
-					{this.props.authors.map(author => 
+					{this.props.authors != null &&
+						this.props.authors.map((author) => 
 						<div key={author}>{author}</div> )
 					}
 			  </div>
