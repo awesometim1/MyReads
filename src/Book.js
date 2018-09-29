@@ -17,8 +17,8 @@ class Book extends React.Component {
   }
 
   shelfChange(event) {
-	this.setState({shelf : event.target.value});
-    this.props.changeShelf(this.props.obj, event.target.value)
+    let initShelf = this.state.shelf;
+	this.setState({shelf : event.target.value}, this.props.changeShelf(this.props.obj, event.target.value, initShelf))
   }
 	
   render() {
@@ -37,7 +37,11 @@ class Book extends React.Component {
                    </div>
                </div>
               <div className="book-title">{this.props.title}</div>
-              <div className="book-authors">{this.props.authors}</div>
+              <div className="book-authors">
+					{this.props.authors.map(author => 
+						<div key={author}>{author}</div> )
+					}
+			  </div>
          </div>
       
       
