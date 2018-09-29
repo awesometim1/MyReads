@@ -59,9 +59,6 @@ class Search extends React.Component {
             </div>
             <div className="search-books-results">
               <ol className="books-grid">
-					{this.state.books.map((bk) =>
-						console.log(bk.shelf)
-					)}
 					{
                       this.state.books.items != null && this.state.books.items.length < 1 ? 
                      	(<h1> NO RESULTS </h1>)
