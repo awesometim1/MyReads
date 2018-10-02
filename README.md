@@ -14,9 +14,9 @@ To Install this web application and see it in action:
 -  Install all project dependencies with `npm install`
 -  Start the development server with `npm start`
 
-##### Note
+#### Note
 The backend API uses a fixed set of cached search results and is limited to a particular set of search terms, which can be found in SEARCH_TERMS.md. That list of terms are the only terms that will work with the backend, so please refer to the SEARCH_TERMS.md file to get a glimpse of the search terms.
 
-Create React App
+# Create React App
 
 This project was bootstrapped with Create React App. You can find more information on this extremely useful tool [here](https://github.com/facebook/create-react-app)
