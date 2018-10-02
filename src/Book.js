@@ -1,58 +1,67 @@
-import React from 'react'
-import './App.css'
+import React from "react";
+import "./App.css";
 
 class Book extends React.Component {
-
   constructor(props) {
     super(props);
     this.shelfChange = this.shelfChange.bind(this);
   }
- 
+
   state = {
-  	shelf : ""
-  }
+    shelf: ""
+  };
 
-
-  componentDidMount(){
-    this.setState({shelf: this.props.shelf});
+  componentDidMount() {
+    this.setState({ shelf: this.props.shelf });
   }
 
   shelfChange(event) {
     let initShelf = this.state.shelf;
-    
-    this.setState({shelf:event.target.value});
-    
-    this.props.changeShelf(this.props.obj, event.target.value, initShelf);
 
+    this.setState({ shelf: event.target.value });
+
+    this.props.changeShelf(this.props.obj, event.target.value, initShelf);
   }
-	
+
   render() {
     return (
-     <div className="book">
-          <div className="book-top">
-               <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${this.props.url != null && this.props.url})` }}></div>
-                    <div className="book-shelf-changer">
-                         <select value={ this.state.shelf || this.props.shelf || 'none'} onChange={this.shelfChange}>
-                              <option value="move" disabled>Move to...</option>
-                              <option value="currentlyReading">Currently Reading</option>
-                              <option value="wantToRead">Want to Read</option>
-                              <option value="read">Read</option>
-                              <option value="none">None</option>
-                         </select>
-                   </div>
-               </div>
-              <div className="book-title">{this.props.title != null && this.props.title}</div>
-              <div className="book-authors">
-					{this.props.authors != null &&
-						this.props.authors.map((author) => 
-						<div key={author}>{author}</div> )
-					}
-			  </div>
-         </div>
-      
-      
-    )
+      <div className="book">
+        <div className="book-top">
+          <div
+            className="book-cover"
+            style={{
+              width: 128,
+              height: 193,
+              backgroundImage: `url(${this.props.url != null &&
+                this.props.url})`
+            }}
+          />
+          <div className="book-shelf-changer">
+            <select
+              value={this.state.shelf || this.props.shelf || "none"}
+              onChange={this.shelfChange}
+            >
+              <option value="move" disabled>
+                Move to...
+              </option>
+              <option value="currentlyReading">Currently Reading</option>
+              <option value="wantToRead">Want to Read</option>
+              <option value="read">Read</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+        </div>
+        <div className="book-title">
+          {this.props.title != null && this.props.title}
+        </div>
+        <div className="book-authors">
+          {this.props.authors != null &&
+            this.props.authors.map(author => <div key={author}>{author}</div>)}
+        </div>
+      </div>
+    );
   }
 }
 
-export default Book
+export default Book;
+
