@@ -19,6 +19,35 @@ class Search extends React.Component {
     
   }
   
+
+
+  onShelf(){
+    BooksAPI.getAll().then((bks) => {
+      	let newBooks = [];
+      	let dup = false;
+        this.state.books.forEach(function(book){
+          	dup = false;
+          	bks.forEach(function(bk){
+              	if (bk.id === book.id){
+                 	newBooks.push(bk); 
+                  	dup = true;
+                }
+            })
+        	if (!dup){
+             	newBooks.push(book); 
+            }
+        
+
+        //end foreach
+        })
+    this.setState({books: newBooks});
+
+    }
+
+    )
+  }
+
+
   handleChange(event) {
     let tempTerm = event.target.value;
     
@@ -30,9 +59,9 @@ class Search extends React.Component {
     BooksAPI.search(tempTerm, 20).then((books) => 
 		{this.setState({
           	searchTerm : tempTerm,
-  			books : books}); } //end setState
+  			books : books}); }, //end setState
                                       
-		) //end then
+		this.onShelf()) //end then
 	}
   }
 
@@ -65,7 +94,8 @@ class Search extends React.Component {
                      	: 
                      	(this.state.books.map((bk) => 
 						<li key={bk.id}>
-                        <Book shelf={"none"} obj={bk} changeShelf={this.props.changeShelf} url={bk.imageLinks.smallThumbnail} title={bk.title} 																authors={bk.authors}/>
+						{console.log(bk.shelf)}
+                        <Book shelf={bk.shelf !== null ? bk.shelf : "none"} obj={bk} changeShelf={this.props.changeShelf} url={bk.imageLinks.smallThumbnail} title={bk.title} authors={bk.authors}/>
                       	</li>)
 					)}
 			  </ol>
