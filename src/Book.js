@@ -1,29 +1,14 @@
 import React from "react";
 import "./App.css";
 
-class Book extends React.Component {
-  constructor(props) {
-    super(props);
-    this.shelfChange = this.shelfChange.bind(this);
+const Book = (props) => {
+
+  const shelfChange = (event) => {
+
+    props.changeShelf(props.obj, event.target.value);
+    
   }
 
-  state = {
-    shelf: ""
-  };
-
-  componentDidMount() {
-    this.setState({ shelf: this.props.shelf });
-  }
-
-  shelfChange(event) {
-    let initShelf = this.state.shelf;
-
-    this.setState({ shelf: event.target.value });
-
-    this.props.changeShelf(this.props.obj, event.target.value, initShelf);
-  }
-
-  render() {
     return (
       <div className="book">
         <div className="book-top">
@@ -32,14 +17,14 @@ class Book extends React.Component {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(${this.props.url != null &&
-                this.props.url})`
+              backgroundImage: `url(${props.url != null &&
+                props.url})`
             }}
           />
           <div className="book-shelf-changer">
             <select
-              value={this.state.shelf || this.props.shelf || "none"}
-              onChange={this.shelfChange}
+              value={props.shelf || "none"}
+              onChange={shelfChange}
             >
               <option value="move" disabled>
                 Move to...
@@ -52,16 +37,16 @@ class Book extends React.Component {
           </div>
         </div>
         <div className="book-title">
-          {this.props.title != null && this.props.title}
+          {props.title != null && props.title}
         </div>
         <div className="book-authors">
-          {this.props.authors != null &&
-            this.props.authors.map(author => <div key={author}>{author}</div>)}
+          {props.authors != null &&
+            props.authors.map(author => <div key={author}>{author}</div>)}
         </div>
       </div>
     );
-  }
 }
+
 
 export default Book;
 

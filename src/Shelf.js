@@ -2,30 +2,21 @@ import React from "react";
 import "./App.css";
 import Book from "./Book.js";
 
-class Shelf extends React.Component {
-  render() {
-    const books = this.props.books;
-    const cat = this.props.id;
-    let catName = "";
-    if (cat.includes("c")) {
-      catName = "Currently Reading";
-    } else if (cat.includes("w")) {
-      catName = "Want To Read";
-    } else {
-      catName = "Read";
-    }
+const Shelf = (props) => {
+  
     return (
       <div className="bookshelf">
-        <h2 className="bookshelf-title">{catName}</h2>
+        <h2 className="bookshelf-title">{props.title}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            {books.map(book => (
+			{console.log(props.books)}
+			{props.books.map(book => (
               <li key={book.id}>
                 <Book
                   shelf={book.shelf}
                   obj={book}
-                  changeShelf={this.props.changeShelf}
-                  url={book.imageLinks.smallThumbnail}
+                  changeShelf={props.changeShelf}
+                  url={book.imageLinks.smallThumbnail !== null ? book.imageLinks.smallThumbnail : "http://via.placeholder.com/128x193?text=No%20Cover"}
                   title={book.title}
                   authors={book.authors}
                 />
@@ -35,7 +26,6 @@ class Shelf extends React.Component {
         </div>
       </div>
     );
-  }
 }
 export default Shelf;
 

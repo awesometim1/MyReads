@@ -12,56 +12,34 @@ class BooksApp extends React.Component {
   }
   //state with list of all books, and a list corresponding to each section of bookshelf
   state = {
-    allBooks: [],
-
-    current: [],
-
-    want: [],
-
-    read: []
+    
+    allBooks: []
+    
   };
 
   //Put all of the books in the state and filter according to current shelf.
   componentDidMount() {
     BooksAPI.getAll().then(allBooks => {
       this.setState({
-        allBooks,
-        current: allBooks.filter(bk => bk.shelf === "currentlyReading"),
-        want: allBooks.filter(bk => bk.shelf === "wantToRead"),
-        read: allBooks.filter(bk => bk.shelf === "read")
+        allBooks: allBooks
       });
     });
   }
 
-  changeShelf(bookToChange, shelf, initShelf) {
+  changeShelf(bookToChange, shelf,) {
+    
     BooksAPI.update(bookToChange, shelf).then(() => {
       bookToChange.shelf = shelf;
-
-      //DELETION
-      if (initShelf != null) {
-        if (initShelf.includes("c")) {
-          this.setState({
-            current: this.state.current.filter(bk => bk.id !== bookToChange.id)
-          });
-        } else if (initShelf.includes("w")) {
-          this.setState({
-            want: this.state.want.filter(bk => bk.id !== bookToChange.id)
-          });
-        } else {
-          this.setState({
-            read: this.state.read.filter(bk => bk.id !== bookToChange.id)
-          });
-        }
+		
+      let findBook = this.state.allBooks.filter((bk) => bk.id === bookToChange.id);
+      
+      if (findBook.length < 1) {
+       	 this.setState({allBooks: this.state.allBooks.concat([bookToChange])});
       }
-
-      //BOOKSHELF CHANGE
-      if (shelf.includes("c")) {
-        this.setState({ current: this.state.current.concat([bookToChange]) });
-      } else if (shelf.includes("w")) {
-        this.setState({ want: this.state.want.concat([bookToChange]) });
-      } else {
-        this.setState({ read: this.state.read.concat([bookToChange]) });
+      else {
+       	 this.setState({allBooks: this.state.allBooks.filter((bk) => bk.id !== bookToChange.id).concat([bookToChange])}); 
       }
+      
     });
   }
 
@@ -83,17 +61,20 @@ class BooksApp extends React.Component {
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="current"
-                    books={this.state.current}
+                    books={this.state.allBooks.filter((bk) => bk.shelf === "currentlyReading")}
+					title="Currently Reading"
                   />
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="want"
-                    books={this.state.want}
+                    books={this.state.allBooks.filter((bk) => bk.shelf === "wantToRead")}
+					title="Want to read" 
                   />
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="read"
-                    books={this.state.read}
+                    books={this.state.allBooks.filter((bk) => bk.shelf === "read")}
+					title="Read"
                   />
                 </div>
               </div>
@@ -109,7 +90,7 @@ class BooksApp extends React.Component {
         <Route
           path="/search"
           render={() => (
-            <Search books={this.state.books} changeShelf={this.changeShelf} />
+            <Search books={this.state.allBooks} changeShelf={this.changeShelf} />
           )}
         />
       </div>

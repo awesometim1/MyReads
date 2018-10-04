@@ -3,23 +3,28 @@ import "./App.css";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Book from "./Book.js";
+import {DebounceInput} from 'react-debounce-input';
 
 class Search extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
+    this.onShelf = this.onShelf.bind(this);
   }
 
   state = {
+    
     searchTerm: "",
-
-    books: []
+	books: []
+    
   };
 
+
   onShelf() {
-    BooksAPI.getAll().then(bks => {
+    BooksAPI.getAll().then((bks) => {
       let newBooks = [];
       let dup = false;
+      if (this.state.books.length >= 1){
       this.state.books.forEach(function(book) {
         dup = false;
         bks.forEach(function(bk) {
@@ -31,10 +36,10 @@ class Search extends React.Component {
         if (!dup) {
           newBooks.push(book);
         }
-
         //end foreach
       });
-      this.setState({ books: newBooks });
+      }
+      this.setState({books: newBooks});
     });
   }
 
@@ -49,11 +54,10 @@ class Search extends React.Component {
         books => {
           this.setState({
             searchTerm: tempTerm,
-            books: books
-          });
-        }, //end setState
+            books: books,
+          }, this.state.books.length < 1 && this.onShelf()); //end setState
+        }, 
 
-        this.onShelf()
       ); //end then
     }
   }
@@ -74,7 +78,8 @@ class Search extends React.Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-            <input
+            <DebounceInput
+          	  debounceTimeout={300}
               type="text"
               value={this.state.searchTerm}
               onChange={this.handleChange}
@@ -84,18 +89,17 @@ class Search extends React.Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {this.state.books.items != null &&
-            this.state.books.items.length < 1 ? (
+            {this.state.books.error !== undefined ||
+              this.state.books.length < 1 ? (
               <h1> NO RESULTS </h1>
             ) : (
               this.state.books.map(bk => (
                 <li key={bk.id}>
-                  {console.log(bk.shelf)}
                   <Book
                     shelf={bk.shelf !== null ? bk.shelf : "none"}
                     obj={bk}
                     changeShelf={this.props.changeShelf}
-                    url={bk.imageLinks.smallThumbnail}
+                    url={bk.imageLinks && bk.imageLinks.smallThumbnail}
                     title={bk.title}
                     authors={bk.authors}
                   />
