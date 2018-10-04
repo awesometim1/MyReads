@@ -12,9 +12,7 @@ class BooksApp extends React.Component {
   }
   //state with list of all books, and a list corresponding to each section of bookshelf
   state = {
-    
     allBooks: []
-    
   };
 
   //Put all of the books in the state and filter according to current shelf.
@@ -26,20 +24,23 @@ class BooksApp extends React.Component {
     });
   }
 
-  changeShelf(bookToChange, shelf,) {
-    
+  changeShelf(bookToChange, shelf) {
     BooksAPI.update(bookToChange, shelf).then(() => {
       bookToChange.shelf = shelf;
-		
-      let findBook = this.state.allBooks.filter((bk) => bk.id === bookToChange.id);
-      
+
+      let findBook = this.state.allBooks.filter(
+        bk => bk.id === bookToChange.id
+      );
+
       if (findBook.length < 1) {
-       	 this.setState({allBooks: this.state.allBooks.concat([bookToChange])});
+        this.setState({ allBooks: this.state.allBooks.concat([bookToChange]) });
+      } else {
+        this.setState({
+          allBooks: this.state.allBooks
+            .filter(bk => bk.id !== bookToChange.id)
+            .concat([bookToChange])
+        });
       }
-      else {
-       	 this.setState({allBooks: this.state.allBooks.filter((bk) => bk.id !== bookToChange.id).concat([bookToChange])}); 
-      }
-      
     });
   }
 
@@ -61,20 +62,26 @@ class BooksApp extends React.Component {
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="current"
-                    books={this.state.allBooks.filter((bk) => bk.shelf === "currentlyReading")}
-					title="Currently Reading"
+                    books={this.state.allBooks.filter(
+                      bk => bk.shelf === "currentlyReading"
+                    )}
+                    title="Currently Reading"
                   />
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="want"
-                    books={this.state.allBooks.filter((bk) => bk.shelf === "wantToRead")}
-					title="Want to read" 
+                    books={this.state.allBooks.filter(
+                      bk => bk.shelf === "wantToRead"
+                    )}
+                    title="Want to read"
                   />
                   <Shelf
                     changeShelf={this.changeShelf}
                     id="read"
-                    books={this.state.allBooks.filter((bk) => bk.shelf === "read")}
-					title="Read"
+                    books={this.state.allBooks.filter(
+                      bk => bk.shelf === "read"
+                    )}
+                    title="Read"
                   />
                 </div>
               </div>
@@ -90,7 +97,10 @@ class BooksApp extends React.Component {
         <Route
           path="/search"
           render={() => (
-            <Search books={this.state.allBooks} changeShelf={this.changeShelf} />
+            <Search
+              books={this.state.allBooks}
+              changeShelf={this.changeShelf}
+            />
           )}
         />
       </div>

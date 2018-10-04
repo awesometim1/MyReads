@@ -3,7 +3,7 @@ import "./App.css";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "./BooksAPI";
 import Book from "./Book.js";
-import {DebounceInput} from 'react-debounce-input';
+import { DebounceInput } from "react-debounce-input";
 
 class Search extends React.Component {
   constructor(props) {
@@ -13,33 +13,30 @@ class Search extends React.Component {
   }
 
   state = {
-    
     searchTerm: "",
-	books: []
-    
+    books: []
   };
 
-
   onShelf() {
-    BooksAPI.getAll().then((bks) => {
+    BooksAPI.getAll().then(bks => {
       let newBooks = [];
       let dup = false;
-      if (this.state.books.length >= 1){
-      this.state.books.forEach(function(book) {
-        dup = false;
-        bks.forEach(function(bk) {
-          if (bk.id === book.id) {
-            newBooks.push(bk);
-            dup = true;
+      if (this.state.books.length >= 1) {
+        this.state.books.forEach(function(book) {
+          dup = false;
+          bks.forEach(function(bk) {
+            if (bk.id === book.id) {
+              newBooks.push(bk);
+              dup = true;
+            }
+          });
+          if (!dup) {
+            newBooks.push(book);
           }
+          //end foreach
         });
-        if (!dup) {
-          newBooks.push(book);
-        }
-        //end foreach
-      });
       }
-      this.setState({books: newBooks});
+      this.setState({ books: newBooks });
     });
   }
 
@@ -50,15 +47,15 @@ class Search extends React.Component {
     if (tempTerm.length < 1) {
       this.setState({ searchTerm: "", books: [] });
     } else {
-      BooksAPI.search(tempTerm, 20).then(
-        books => {
-          this.setState({
+      BooksAPI.search(tempTerm, 20).then(books => {
+        this.setState(
+          {
             searchTerm: tempTerm,
-            books: books,
-          }, this.state.books.length < 1 && this.onShelf()); //end setState
-        }, 
-
-      ); //end then
+            books: books
+          },
+          this.state.books.length < 1 && this.onShelf()
+        ); //end setState
+      }); //end then
     }
   }
 
@@ -79,7 +76,7 @@ class Search extends React.Component {
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
             <DebounceInput
-          	  debounceTimeout={300}
+              debounceTimeout={300}
               type="text"
               value={this.state.searchTerm}
               onChange={this.handleChange}
@@ -90,7 +87,7 @@ class Search extends React.Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {this.state.books.error !== undefined ||
-              this.state.books.length < 1 ? (
+            this.state.books.length < 1 ? (
               <h1> NO RESULTS </h1>
             ) : (
               this.state.books.map(bk => (
